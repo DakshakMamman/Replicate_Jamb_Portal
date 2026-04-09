@@ -31,6 +31,22 @@
     .paw-bg { background-image: repeating-linear-gradient(45deg, rgba(212,160,23,0.02) 0px, rgba(212,160,23,0.02) 2px, transparent 2px, transparent 20px); }
     ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #1A1208; } ::-webkit-scrollbar-thumb { background: #3D2B1F; border-radius: 3px; }
     .progress-fill { transition: width 0.5s ease; }
+    
+    /* Mobile menu styles */
+    .mobile-menu-btn { display: none; }
+    .mobile-menu { display: none; }
+    
+    @media (max-width: 768px) {
+      .mobile-menu-btn { display: block !important; }
+      .desktop-nav { display: none !important; }
+      .mobile-menu.show { display: flex !important; }
+      .w-14 { width: 40px !important; height: 40px !important; }
+      h1.bebas { font-size: 1.5rem !important; }
+      .grid-cols-4 { grid-template-columns: repeat(2, 1fr); }
+      .grid-cols-3 { grid-template-columns: repeat(2, 1fr); }
+      .grid-cols-2 { grid-template-columns: 1fr; }
+      .max-w-5xl { max-width: 100%; padding-left: 1rem; padding-right: 1rem; }
+    }
   </style>
 </head>
 <body class="min-h-screen paw-bg">
@@ -54,7 +70,18 @@
         <h1 class="bebas text-4xl tracking-widest" style="color:#D4A017; line-height:1;">JAMB PORTAL</h1>
         <p class="text-xs tracking-widest italic" style="color:#C8A96E;">Joint Admissions &amp; Matriculation Board — Nigeria</p>
       </div>
-      <div class="ml-auto flex items-center gap-3">
+      
+      <!-- Mobile menu button -->
+      <button class="mobile-menu-btn ml-auto p-2 rounded" style="background:#2A1A05; color:#D4A017;" onclick="toggleMobileMenu()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      
+      <!-- Desktop navigation -->
+      <div class="desktop-nav ml-auto flex items-center gap-3">
         <span class="text-xs px-3 py-1 rounded-full border font-semibold tracking-wider" style="background:#0A2010; color:#4CAF50; border-color:#1A4020;">● SYSTEM LIVE</span>
         <button onclick="window.location.href='index.html'" class="bebas tracking-widest text-sm px-4 py-2 rounded border transition" style="color:#D4A017; border-color:#D4A017;" onmouseover="this.style.background='#D4A017';this.style.color='#0F0C06'" onmouseout="this.style.background='transparent';this.style.color='#D4A017'">
           ← Home
@@ -63,6 +90,17 @@
           Take Exam
         </button>
       </div>
+    </div>
+    
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="mobile-menu flex-col gap-2 px-6 py-4 border-t" style="background:#1A1208; border-color:#3D2B1F;">
+      <span class="text-xs px-3 py-1 rounded-full border font-semibold tracking-wider" style="background:#0A2010; color:#4CAF50; border-color:#1A4020;">● SYSTEM LIVE</span>
+      <button onclick="window.location.href='index.html'" class="bebas tracking-widest text-sm px-4 py-2 rounded border transition w-full" style="color:#D4A017; border-color:#D4A017;" onmouseover="this.style.background='#D4A017';this.style.color='#0F0C06'" onmouseout="this.style.background='transparent';this.style.color='#D4A017'">
+        ← Home
+      </button>
+      <button onclick="window.location.href='exam.html'" class="bebas tracking-widest text-sm px-4 py-2 rounded border transition w-full" style="color:#D4A017; border-color:#D4A017;" onmouseover="this.style.background='#D4A017';this.style.color='#0F0C06'" onmouseout="this.style.background='transparent';this.style.color='#D4A017'">
+        Take Exam
+      </button>
     </div>
     <!-- Nigeria stripe -->
     <div class="h-1" style="background: linear-gradient(90deg, #008751 0%, #00C070 50%, #008751 100%);"></div>
@@ -268,11 +306,20 @@
   </main>
 
   <footer class="border-t mt-16 py-5 text-center" style="border-color:#1A1208;">
-    <p class="text-xs tracking-widest" style="color:#3D2B1F;">© 2026 JOINT ADMISSIONS AND MATRICULATION BOARD — FEDERAL REPUBLIC OF NIGERIA 🇳🇬</p>
+    <p class="text-xs tracking-widest" style="color:#3D2B1F;"> 2026 JOINT ADMISSIONS AND MATRICULATION BOARD — FEDERAL REPUBLIC OF NIGERIA 🇳🇬</p>
   </footer>
 
   <script src="auth.js"></script>
   <script src="questions.js"></script>
   <script src="register.js"></script>
+  <script>
+    // Toggle mobile menu
+    function toggleMobileMenu() {
+      const mobileMenu = document.getElementById('mobile-menu');
+      if (mobileMenu) {
+        mobileMenu.classList.toggle('show');
+      }
+    }
+  </script>
 </body>
 </html>

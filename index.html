@@ -24,6 +24,21 @@
     .gold-border { border-image: linear-gradient(90deg, #C8601A, #D4A017, #C8601A) 1; }
     @keyframes soar { 0%,100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-4px) rotate(1deg); } }
     .eagle { animation: soar 3s ease-in-out infinite; }
+    
+    /* Mobile menu styles */
+    .mobile-menu-btn { display: none; }
+    .mobile-menu { display: none; }
+    
+    @media (max-width: 768px) {
+      .mobile-menu-btn { display: block !important; }
+      .desktop-nav { display: none !important; }
+      .mobile-menu.show { display: flex !important; }
+      .eagle { width: 40px; height: 40px; }
+      h1.bebas { font-size: 1.5rem !important; }
+      .text-5xl { font-size: 2.5rem !important; }
+      .grid-cols-3 { grid-template-columns: 1fr; }
+      .grid-cols-2 { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body class="min-h-screen paw-bg">
@@ -47,7 +62,18 @@
         <h1 class="bebas text-4xl tracking-widest" style="color:#D4A017; line-height:1;">JAMB PORTAL</h1>
         <p class="text-xs tracking-widest italic" style="color:#C8A96E;">Joint Admissions &amp; Matriculation Board — Nigeria</p>
       </div>
-      <div class="ml-auto flex items-center gap-3">
+      
+      <!-- Mobile menu button -->
+      <button class="mobile-menu-btn ml-auto p-2 rounded" style="background:#2A1A05; color:#D4A017;" onclick="toggleMobileMenu()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      
+      <!-- Desktop navigation -->
+      <div class="desktop-nav ml-auto flex items-center gap-3">
         <span class="text-xs px-3 py-1 rounded-full border font-semibold tracking-wider" style="background:#0A2010; color:#4CAF50; border-color:#1A4020;">● SYSTEM LIVE</span>
         <button id="login-btn" onclick="window.location.href='login.html'" class="bebas tracking-widest text-sm px-4 py-2 rounded border transition" style="color:#D4A017; border-color:#D4A017;" onmouseover="this.style.background='#D4A017';this.style.color='#0F0C06'" onmouseout="this.style.background='transparent';this.style.color='#D4A017'">
           Login
@@ -68,6 +94,29 @@
           Check Results
         </button>
       </div>
+    </div>
+    
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="mobile-menu flex-col gap-2 px-6 py-4 border-t" style="background:#1A1208; border-color:#3D2B1F;">
+      <span class="text-xs px-3 py-1 rounded-full border font-semibold tracking-wider" style="background:#0A2010; color:#4CAF50; border-color:#1A4020;">● SYSTEM LIVE</span>
+      <button id="mobile-login-btn" onclick="window.location.href='login.html'" class="bebas tracking-widest text-sm px-4 py-2 rounded border transition w-full" style="color:#D4A017; border-color:#D4A017;" onmouseover="this.style.background='#D4A017';this.style.color='#0F0C06'" onmouseout="this.style.background='transparent';this.style.color='#D4A017'">
+        Login
+      </button>
+      <button id="mobile-logout-btn" onclick="logout()" class="hidden bebas tracking-widest text-sm px-4 py-2 rounded border transition w-full" style="color:#E24B4A; border-color:#E24B4A;" onmouseover="this.style.background='#E24B4A';this.style.color='#0F0C06'" onmouseout="this.style.background='transparent';this.style.color='#E24B4A'">
+        Logout
+      </button>
+      <button id="mobile-user-info" class="hidden bebas tracking-widest text-sm px-4 py-2 rounded w-full" style="background:#2A1A05; color:#F5EDD6;">
+        <!-- User info will be inserted here -->
+      </button>
+      <button onclick="window.location.href='register.html'" class="bebas tracking-widest text-sm px-4 py-2 rounded border transition w-full" style="color:#D4A017; border-color:#D4A017;" onmouseover="this.style.background='#D4A017';this.style.color='#0F0C06'" onmouseout="this.style.background='transparent';this.style.color='#D4A017'">
+        Register
+      </button>
+      <button onclick="window.location.href='exam.html'" class="bebas tracking-widest text-sm px-4 py-2 rounded border transition w-full" style="color:#D4A017; border-color:#D4A017;" onmouseover="this.style.background='#D4A017';this.style.color='#0F0C06'" onmouseout="this.style.background='transparent';this.style.color='#D4A017'">
+        Take Exam
+      </button>
+      <button id="mobile-results-btn" onclick="showResults()" class="hidden bebas tracking-widest text-sm px-4 py-2 rounded transition w-full" style="background:#4CAF50; color:#F5EDD6;" onmouseover="this.style.background='#2A6A3A';this.style.color='#0F0C06'" onmouseout="this.style.background='#4CAF50';this.style.color='#F5EDD6'">
+        Check Results
+      </button>
     </div>
     <!-- Nigeria stripe -->
     <div class="h-1" style="background: linear-gradient(90deg, #008751 0%, #00C070 50%, #008751 100%);"></div>
@@ -139,12 +188,27 @@
     // Initialize
     updateStatCount();
     
+    // Toggle mobile menu
+    function toggleMobileMenu() {
+      const mobileMenu = document.getElementById('mobile-menu');
+      if (mobileMenu) {
+        mobileMenu.classList.toggle('show');
+      }
+    }
+
     // Check if user is logged in and update UI
     function updateAuthUI() {
       const user = getCurrentUser();
+      
+      // Desktop elements
       const loginBtn = document.getElementById('login-btn');
       const logoutBtn = document.getElementById('logout-btn');
       const userInfo = document.getElementById('user-info');
+      
+      // Mobile elements
+      const mobileLoginBtn = document.getElementById('mobile-login-btn');
+      const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
+      const mobileUserInfo = document.getElementById('mobile-user-info');
       
       if (user) {
         // User is logged in
@@ -154,11 +218,24 @@
           userInfo.classList.remove('hidden');
           userInfo.textContent = `${user.firstName} ${user.lastName}`;
         }
+        
+        // Mobile elements
+        if (mobileLoginBtn) mobileLoginBtn.classList.add('hidden');
+        if (mobileLogoutBtn) mobileLogoutBtn.classList.remove('hidden');
+        if (mobileUserInfo) {
+          mobileUserInfo.classList.remove('hidden');
+          mobileUserInfo.textContent = `${user.firstName} ${user.lastName}`;
+        }
       } else {
         // User is not logged in
         if (loginBtn) loginBtn.classList.remove('hidden');
         if (logoutBtn) logoutBtn.classList.add('hidden');
         if (userInfo) userInfo.classList.add('hidden');
+        
+        // Mobile elements
+        if (mobileLoginBtn) mobileLoginBtn.classList.remove('hidden');
+        if (mobileLogoutBtn) mobileLogoutBtn.classList.add('hidden');
+        if (mobileUserInfo) mobileUserInfo.classList.add('hidden');
       }
     }
     
@@ -167,10 +244,13 @@
       const user = getCurrentUser();
       const hasResults = user && user.examResults;
       const resultsBtn = document.getElementById('results-btn');
-      if (resultsBtn) {
-        if (hasResults) {
-          resultsBtn.classList.remove('hidden');
-        }
+      const mobileResultsBtn = document.getElementById('mobile-results-btn');
+      
+      if (resultsBtn && hasResults) {
+        resultsBtn.classList.remove('hidden');
+      }
+      if (mobileResultsBtn && hasResults) {
+        mobileResultsBtn.classList.remove('hidden');
       }
     }
     

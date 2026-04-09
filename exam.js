@@ -141,6 +141,9 @@ function renderSubjectTabs() {
     tab.className = `subject-tab px-4 py-2 rounded-lg text-sm bebas tracking-wider transition-all ${
       index === currentExamState.currentSubject ? 'active' : ''
     }`;
+    tab.style.cssText = index === currentExamState.currentSubject 
+      ? 'background: #C8601A; color: #F5EDD6;'
+      : 'background: #3D2B1F; color: #F5EDD6;';
     tab.textContent = subject.name;
     tab.onclick = () => switchToSubject(index);
     tabsContainer.appendChild(tab);
