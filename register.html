@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Portal — Registration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --savanna: #C8601A;
+      --gold: #D4A017;
+      --night: #0F0C06;
+      --bark: #3D2B1F;
+      --cream: #F5EDD6;
+    }
+    body { font-family: 'Crimson Pro', Georgia, serif; background: #0F0C06; }
+    .bebas { font-family: 'Bebas Neue', Impact, sans-serif; }
+    .fade-in { animation: fadeIn 0.5s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .step-dot { transition: all 0.3s; }
+    .subject-card { transition: all 0.2s; }
+    .subject-card.selected { border-color: #C8601A !important; background: #2A1205 !important; }
+    .subject-card:hover:not(.selected):not(.disabled) { border-color: #5C3D20; }
+    .subject-card.disabled { opacity: 0.4; cursor: not-allowed; }
+    input:focus, select:focus { outline: 2px solid #C8601A; outline-offset: 1px; }
+    .toast { animation: slideIn 0.3s ease, fadeOut 0.4s ease 2.6s forwards; }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes fadeOut { to { opacity: 0; transform: translateX(100%); } }
+    .paw-bg { background-image: repeating-linear-gradient(45deg, rgba(212,160,23,0.02) 0px, rgba(212,160,23,0.02) 2px, transparent 2px, transparent 20px); }
+    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #1A1208; } ::-webkit-scrollbar-thumb { background: #3D2B1F; border-radius: 3px; }
+    .progress-fill { transition: width 0.5s ease; }
+  </style>
+</head>
+<body class="min-h-screen paw-bg">
+
+  <!-- TOAST -->
+  <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2"></div>
+
+  <!-- HEADER -->
+  <header class="border-b-2" style="background:#1A1208; border-color:#D4A017;">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center gap-4">
+      <svg class="w-14 h-14 flex-shrink-0" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="36" cy="36" r="34" fill="#2A1A05" stroke="#D4A017" stroke-width="1.5"/>
+        <path d="M36 14 C36 14 28 20 20 26 C16 29 14 32 16 35 C18 38 24 37 28 34 L30 32 L28 40 C27 44 26 48 30 50 C32 51 34 50 35 48 L36 44 L37 48 C38 50 40 51 42 50 C46 48 45 44 44 40 L42 32 L44 34 C48 37 54 38 56 35 C58 32 56 29 52 26 C44 20 36 14 36 14Z" fill="#D4A017"/>
+        <ellipse cx="36" cy="26" rx="5" ry="6" fill="#C8601A"/>
+        <circle cx="36" cy="22" r="4" fill="#8B4513"/>
+        <path d="M33 21 Q36 18 39 21" fill="#D4A017"/>
+        <circle cx="34.5" cy="21.5" r="1" fill="#1A1208"/>
+        <circle cx="37.5" cy="21.5" r="1" fill="#1A1208"/>
+      </svg>
+      <div>
+        <h1 class="bebas text-4xl tracking-widest" style="color:#D4A017; line-height:1;">JAMB PORTAL</h1>
+        <p class="text-xs tracking-widest italic" style="color:#C8A96E;">Joint Admissions &amp; Matriculation Board — Nigeria</p>
+      </div>
+      <div class="ml-auto flex items-center gap-3">
+        <span class="text-xs px-3 py-1 rounded-full border font-semibold tracking-wider" style="background:#0A2010; color:#4CAF50; border-color:#1A4020;">● SYSTEM LIVE</span>
+        <button onclick="window.location.href='index.html'" class="bebas tracking-widest text-sm px-4 py-2 rounded border transition" style="color:#D4A017; border-color:#D4A017;" onmouseover="this.style.background='#D4A017';this.style.color='#0F0C06'" onmouseout="this.style.background='transparent';this.style.color='#D4A017'">
+          ← Home
+        </button>
+        <button onclick="window.location.href='exam.html'" class="bebas tracking-widest text-sm px-4 py-2 rounded border transition" style="color:#D4A017; border-color:#D4A017;" onmouseover="this.style.background='#D4A017';this.style.color='#0F0C06'" onmouseout="this.style.background='transparent';this.style.color='#D4A017'">
+          Take Exam
+        </button>
+      </div>
+    </div>
+    <!-- Nigeria stripe -->
+    <div class="h-1" style="background: linear-gradient(90deg, #008751 0%, #00C070 50%, #008751 100%);"></div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="max-w-5xl mx-auto px-6 py-10">
+    <!-- Back -->
+    <button onclick="window.location.href='index.html'" class="flex items-center gap-2 text-sm mb-8 hover:opacity-80 transition" style="color:#8B7355;">
+      ← Back to Home
+    </button>
+
+    <!-- Step indicator -->
+    <div class="flex items-center gap-2 mb-10">
+      <div id="step1-dot" class="step-dot w-8 h-8 rounded-full flex items-center justify-center bebas text-sm" style="background:#C8601A; color:#F5EDD6;">1</div>
+      <div class="bebas tracking-wider text-sm step-dot" style="color:#C8601A;" id="step1-label">Personal Info</div>
+      <div class="flex-1 h-px mx-2" style="background:#3D2B1F;"></div>
+      <div id="step2-dot" class="step-dot w-8 h-8 rounded-full flex items-center justify-center bebas text-sm" style="background:#3D2B1F; color:#6B5A3E;">2</div>
+      <div class="bebas tracking-wider text-sm step-dot" style="color:#6B5A3E;" id="step2-label">Academic Details</div>
+      <div class="flex-1 h-px mx-2" style="background:#3D2B1F;"></div>
+      <div id="step3-dot" class="step-dot w-8 h-8 rounded-full flex items-center justify-center bebas text-sm" style="background:#3D2B1F; color:#6B5A3E;">3</div>
+      <div class="bebas tracking-wider text-sm step-dot" style="color:#6B5A3E;" id="step3-label">Select Subjects</div>
+      <div class="flex-1 h-px mx-2" style="background:#3D2B1F;"></div>
+      <div id="step4-dot" class="step-dot w-8 h-8 rounded-full flex items-center justify-center bebas text-sm" style="background:#3D2B1F; color:#6B5A3E;">4</div>
+      <div class="bebas tracking-wider text-sm step-dot" style="color:#6B5A3E;" id="step4-label">Review</div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="w-full rounded-full h-1.5 mb-10" style="background:#2A1A05;">
+      <div id="progress-bar" class="progress-fill h-1.5 rounded-full" style="background:linear-gradient(90deg,#C8601A,#D4A017); width:25%;"></div>
+    </div>
+
+    <!-- STEP 1: Personal Info -->
+    <div id="step-1" class="fade-in">
+      <div class="flex items-center gap-3 mb-7">
+        <span class="text-3xl">🐆</span>
+        <h2 class="bebas text-3xl tracking-wider" style="color:#F5EDD6;">PERSONAL INFORMATION</h2>
+      </div>
+      <div class="rounded-2xl p-8 border" style="background:#1A1208; border-color:#3D2B1F;">
+        <div class="grid grid-cols-2 gap-5">
+          <div>
+            <label class="block text-xs tracking-widest uppercase mb-2" style="color:#8B7355;">First Name *</label>
+            <input id="firstName" type="text" placeholder="Enter first name" class="w-full rounded-lg px-4 py-3 text-sm" style="background:#0F0C06; border:1px solid #3D2B1F; color:#F5EDD6;" />
+          </div>
+          <div>
+            <label class="block text-xs tracking-widest uppercase mb-2" style="color:#8B7355;">Last Name *</label>
+            <input id="lastName" type="text" placeholder="Enter last name" class="w-full rounded-lg px-4 py-3 text-sm" style="background:#0F0C06; border:1px solid #3D2B1F; color:#F5EDD6;" />
+          </div>
+          <div>
+            <label class="block text-xs tracking-widest uppercase mb-2" style="color:#8B7355;">Middle Name</label>
+            <input id="middleName" type="text" placeholder="Enter middle name (optional)" class="w-full rounded-lg px-4 py-3 text-sm" style="background:#0F0C06; border:1px solid #3D2B1F; color:#F5EDD6;" />
+          </div>
+          <div>
+            <label class="block text-xs tracking-widest uppercase mb-2" style="color:#8B7355;">Date of Birth *</label>
+            <input id="dob" type="date" class="w-full rounded-lg px-4 py-3 text-sm" style="background:#0F0C06; border:1px solid #3D2B1F; color:#F5EDD6;" />
+          </div>
+          <div>
+            <label class="block text-xs tracking-widest uppercase mb-2" style="color:#8B7355;">Gender *</label>
+            <select id="gender" class="w-full rounded-lg px-4 py-3 text-sm" style="background:#0F0C06; border:1px solid #3D2B1F; color:#F5EDD6;">
+              <option value="">Select gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs tracking-widest uppercase mb-2" style="color:#8B7355;">Phone Number *</label>
+            <input id="phone" type="tel" placeholder="e.g 08012345678" class="w-full rounded-lg px-4 py-3 text-sm" style="background:#0F0C06; border:1px solid #3D2B1F; color:#F5EDD6;" />
+          </div>
+          <div class="col-span-2">
+            <label class="block text-xs tracking-widest uppercase mb-2" style="color:#8B7355;">Email Address *</label>
+            <input id="email" type="email" placeholder="Enter valid email address" class="w-full rounded-lg px-4 py-3 text-sm" style="background:#0F0C06; border:1px solid #3D2B1F; color:#F5EDD6;" />
+          </div>
+          <div>
+            <label class="block text-xs tracking-widest uppercase mb-2" style="color:#8B7355;">State of Origin *</label>
+            <select id="stateOrigin" class="w-full rounded-lg px-4 py-3 text-sm" style="background:#0F0C06; border:1px solid #3D2B1F; color:#F5EDD6;">
+              <option value="">Select state</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs tracking-widest uppercase mb-2" style="color:#8B7355;">LGA *</label>
+            <input id="lga" type="text" placeholder="Local Government Area" class="w-full rounded-lg px-4 py-3 text-sm" style="background:#0F0C06; border:1px solid #3D2B1F; color:#F5EDD6;" />
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-end mt-6">
+        <button onclick="nextStep(2)" class="bebas tracking-widest px-8 py-3 rounded-lg transition" style="background:#C8601A; color:#F5EDD6;" onmouseover="this.style.background='#D4A017';this.style.color='#0F0C06'" onmouseout="this.style.background='#C8601A';this.style.color='#F5EDD6'">
+          Next: Academic Details →
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 2: Academic Details -->
+    <div id="step-2" class="hidden fade-in">
+      <div class="flex items-center gap-3 mb-7">
+        <span class="text-3xl">🦏</span>
+        <h2 class="bebas text-3xl tracking-wider" style="color:#F5EDD6;">ACADEMIC DETAILS</h2>
+      </div>
+      <div class="rounded-2xl p-8 border" style="background:#1A1208; border-color:#3D2B1F;">
+        <div class="grid grid-cols-2 gap-5">
+          <div class="col-span-2">
+            <label class="block text-xs tracking-widest uppercase mb-2" style="color:#8B7355;">First Choice Institution *</label>
+            <select id="institution" class="w-full rounded-lg px-4 py-3 text-sm" style="background:#0F0C06; border:1px solid #3D2B1F; color:#F5EDD6;">
+              <option value="">Select your institution</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs tracking-widest uppercase mb-2" style="color:#8B7355;">Course / Programme *</label>
+            <input id="course" type="text" placeholder="e.g. Computer Science" class="w-full rounded-lg px-4 py-3 text-sm" style="background:#0F0C06; border:1px solid #3D2B1F; color:#F5EDD6;" />
+          </div>
+          <div>
+            <label class="block text-xs tracking-widest uppercase mb-2" style="color:#8B7355;">Exam Town *</label>
+            <select id="examTown" class="w-full rounded-lg px-4 py-3 text-sm" style="background:#0F0C06; border:1px solid #3D2B1F; color:#F5EDD6;">
+              <option value="">Select exam town</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs tracking-widest uppercase mb-2" style="color:#8B7355;">O'Level Qualification *</label>
+            <select id="olevel" class="w-full rounded-lg px-4 py-3 text-sm" style="background:#0F0C06; border:1px solid #3D2B1F; color:#F5EDD6;">
+              <option value="">Select qualification</option>
+              <option value="WAEC">WAEC</option>
+              <option value="NECO">NECO</option>
+              <option value="NABTEB">NABTEB</option>
+              <option value="GCE">GCE</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs tracking-widest uppercase mb-2" style="color:#8B7355;">Exam Year *</label>
+            <select id="examYear" class="w-full rounded-lg px-4 py-3 text-sm" style="background:#0F0C06; border:1px solid #3D2B1F; color:#F5EDD6;">
+              <option value="">Select year</option>
+              <option>2025</option><option>2024</option><option>2023</option><option>2022</option><option>2021</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-between mt-6">
+        <button onclick="nextStep(1)" class="bebas tracking-widest px-8 py-3 rounded-lg border transition" style="color:#8B7355; border-color:#3D2B1F;" onmouseover="this.style.borderColor='#8B7355'" onmouseout="this.style.borderColor='#3D2B1F'">
+          ← Back
+        </button>
+        <button onclick="nextStep(3)" class="bebas tracking-widest px-8 py-3 rounded-lg transition" style="background:#C8601A; color:#F5EDD6;" onmouseover="this.style.background='#D4A017';this.style.color='#0F0C06'" onmouseout="this.style.background='#C8601A';this.style.color='#F5EDD6'">
+          Next: Select Subjects →
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Subject Selection -->
+    <div id="step-3" class="hidden fade-in">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="text-3xl">🦁</span>
+        <h2 class="bebas text-3xl tracking-wider" style="color:#F5EDD6;">SELECT YOUR SUBJECTS</h2>
+      </div>
+      <p class="text-sm mb-2 italic" style="color:#8B7355;">English Language is compulsory. Select 3 more subjects to complete your 4-subject combination.</p>
+      <div id="subject-count-display" class="flex items-center gap-2 mb-7">
+        <div class="flex gap-1">
+          <div id="pip1" class="w-8 h-2 rounded-full" style="background:#C8601A;"></div>
+          <div id="pip2" class="w-8 h-2 rounded-full" style="background:#3D2B1F;"></div>
+          <div id="pip3" class="w-8 h-2 rounded-full" style="background:#3D2B1F;"></div>
+          <div id="pip4" class="w-8 h-2 rounded-full" style="background:#3D2B1F;"></div>
+        </div>
+        <span id="subject-count-text" class="text-xs tracking-widest uppercase" style="color:#8B7355;">1 of 4 selected</span>
+      </div>
+
+      <!-- Compulsory Subject -->
+      <div class="rounded-xl p-4 border mb-3 flex items-center gap-4" style="background:#0A2010; border-color:#1A4020;">
+        <div class="w-5 h-5 rounded flex items-center justify-center flex-shrink-0" style="background:#4CAF50;">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="flex-1">
+          <div class="bebas tracking-wider" style="color:#4CAF50;">USE OF ENGLISH</div>
+          <div class="text-xs" style="color:#2A6A3A;">Compulsory for all candidates</div>
+        </div>
+        <span class="text-xs px-2 py-1 rounded" style="background:#1A4020; color:#4CAF50;">COMPULSORY</span>
+      </div>
+
+      <!-- Subject Grid -->
+      <div id="subjects-grid" class="grid grid-cols-3 gap-3 mb-6"></div>
+
+      <div class="flex justify-between mt-2">
+        <button onclick="nextStep(2)" class="bebas tracking-widest px-8 py-3 rounded-lg border transition" style="color:#8B7355; border-color:#3D2B1F;">
+          ← Back
+        </button>
+        <button onclick="nextStep(4)" class="bebas tracking-widest px-8 py-3 rounded-lg transition" style="background:#C8601A; color:#F5EDD6;" onmouseover="this.style.background='#D4A017';this.style.color='#0F0C06'" onmouseout="this.style.background='#C8601A';this.style.color='#F5EDD6'">
+          Next: Review →
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 4: Review & Submit -->
+    <div id="step-4" class="hidden fade-in">
+      <div class="flex items-center gap-3 mb-7">
+        <span class="text-3xl">🦅</span>
+        <h2 class="bebas text-3xl tracking-wider" style="color:#F5EDD6;">REVIEW & SUBMIT</h2>
+      </div>
+      <div id="review-content" class="rounded-2xl p-8 border mb-6" style="background:#1A1208; border-color:#3D2B1F;"></div>
+      <div class="flex justify-between">
+        <button onclick="nextStep(3)" class="bebas tracking-widest px-8 py-3 rounded-lg border transition" style="color:#8B7355; border-color:#3D2B1F;">
+          ← Edit
+        </button>
+        <button onclick="submitRegistration()" class="bebas tracking-widest px-10 py-3 rounded-lg transition text-lg" style="background:linear-gradient(135deg,#C8601A,#D4A017); color:#0F0C06;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+          🦁 Submit Registration
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t mt-16 py-5 text-center" style="border-color:#1A1208;">
+    <p class="text-xs tracking-widest" style="color:#3D2B1F;">© 2026 JOINT ADMISSIONS AND MATRICULATION BOARD — FEDERAL REPUBLIC OF NIGERIA 🇳🇬</p>
+  </footer>
+
+  <script src="auth.js"></script>
+  <script src="questions.js"></script>
+  <script src="register.js"></script>
+</body>
+</html>

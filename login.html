@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Portal — Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --savanna: #C8601A;
+      --gold: #D4A017;
+      --night: #0F0C06;
+      --bark: #3D2B1F;
+      --cream: #F5EDD6;
+    }
+    body { font-family: 'Crimson Pro', Georgia, serif; background: #0F0C06; }
+    .bebas { font-family: 'Bebas Neue', Impact, sans-serif; }
+    .fade-in { animation: fadeIn 0.5s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .toast { animation: slideIn 0.3s ease, fadeOut 0.4s ease 2.6s forwards; }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes fadeOut { to { opacity: 0; transform: translateX(100%); } }
+    .paw-bg { background-image: repeating-linear-gradient(45deg, rgba(212,160,23,0.02) 0px, rgba(212,160,23,0.02) 2px, transparent 2px, transparent 20px); }
+    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #1A1208; } ::-webkit-scrollbar-thumb { background: #3D2B1F; border-radius: 3px; }
+  </style>
+</head>
+<body class="min-h-screen paw-bg">
+
+  <!-- TOAST -->
+  <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2"></div>
+
+  <!-- HEADER -->
+  <header class="border-b-2" style="background:#1A1208; border-color:#D4A017;">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center gap-4">
+      <svg class="w-14 h-14 flex-shrink-0" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="36" cy="36" r="34" fill="#2A1A05" stroke="#D4A017" stroke-width="1.5"/>
+        <path d="M36 14 C36 14 28 20 20 26 C16 29 14 32 16 35 C18 38 24 37 28 34 L30 32 L28 40 C27 44 26 48 30 50 C32 51 34 50 35 48 L36 44 L37 48 C38 50 40 51 42 50 C46 48 45 44 44 40 L42 32 L44 34 C48 37 54 38 56 35 C58 32 56 29 52 26 C44 20 36 14 36 14Z" fill="#D4A017"/>
+        <ellipse cx="36" cy="26" rx="5" ry="6" fill="#C8601A"/>
+        <circle cx="36" cy="22" r="4" fill="#8B4513"/>
+        <path d="M33 21 Q36 18 39 21" fill="#D4A017"/>
+        <circle cx="34.5" cy="21.5" r="1" fill="#1A1208"/>
+        <circle cx="37.5" cy="21.5" r="1" fill="#1A1208"/>
+      </svg>
+      <div>
+        <h1 class="bebas text-4xl tracking-widest" style="color:#D4A017; line-height:1;">JAMB PORTAL</h1>
+        <p class="text-xs tracking-widest italic" style="color:#C8A96E;">Joint Admissions &amp; Matriculation Board — Nigeria</p>
+      </div>
+      <div class="ml-auto flex items-center gap-3">
+        <span class="text-xs px-3 py-1 rounded-full border font-semibold tracking-wider" style="background:#0A2010; color:#4CAF50; border-color:#1A4020;">● SYSTEM LIVE</span>
+        <button onclick="window.location.href='index.html'" class="bebas tracking-widest text-sm px-4 py-2 rounded border transition" style="color:#D4A017; border-color:#D4A017;" onmouseover="this.style.background='#D4A017';this.style.color='#0F0C06'" onmouseout="this.style.background='transparent';this.style.color='#D4A017'">
+          ← Home
+        </button>
+      </div>
+    </div>
+    <!-- Nigeria stripe -->
+    <div class="h-1" style="background: linear-gradient(90deg, #008751 0%, #00C070 50%, #008751 100%);"></div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="max-w-5xl mx-auto px-6 py-10">
+    <div class="flex items-center gap-3 mb-8">
+      <span class="text-3xl">🔐</span>
+      <h2 class="bebas text-3xl tracking-wider" style="color:#F5EDD6;">CANDIDATE LOGIN</h2>
+    </div>
+
+    <div class="max-w-md mx-auto">
+      <div class="rounded-2xl p-8 border" style="background:#1A1208; border-color:#3D2B1F;">
+        <form onsubmit="handleLogin(event)">
+          <div class="mb-6">
+            <label class="block text-xs tracking-widest uppercase mb-2" style="color:#8B7355;">Email Address</label>
+            <input id="login-email" type="email" required placeholder="Enter your email address" class="w-full rounded-lg px-4 py-3 text-sm" style="background:#0F0C06; border:1px solid #3D2B1F; color:#F5EDD6;" />
+          </div>
+          
+          <div class="mb-6">
+            <label class="block text-xs tracking-widest uppercase mb-2" style="color:#8B7355;">Registration Number</label>
+            <input id="login-regno" type="text" required placeholder="Enter your JAMB registration number" class="w-full rounded-lg px-4 py-3 text-sm" style="background:#0F0C06; border:1px solid #3D2B1F; color:#F5EDD6;" />
+          </div>
+          
+          <button type="submit" class="w-full bebas tracking-widest px-8 py-3 rounded-lg transition" style="background:#C8601A; color:#F5EDD6;" onmouseover="this.style.background='#D4A017';this.style.color='#0F0C06'" onmouseout="this.style.background='#C8601A';this.style.color='#F5EDD6'">
+            Login to Portal
+          </button>
+        </form>
+        
+        <div class="mt-6 text-center">
+          <p class="text-sm" style="color:#8B7355;">Don't have an account?</p>
+          <button onclick="window.location.href='register.html'" class="bebas tracking-widest text-sm px-4 py-2 rounded border transition mt-2" style="color:#D4A017; border-color:#D4A017;" onmouseover="this.style.background='#D4A017';this.style.color='#0F0C06'" onmouseout="this.style.background='transparent';this.style.color='#D4A017'">
+            Register Now
+          </button>
+        </div>
+      </div>
+      
+      <!-- Quick Access -->
+      <div class="mt-8 text-center">
+        <p class="text-xs" style="color:#5C4030;">Quick access with:</p>
+        <div class="mt-3 flex justify-center gap-2">
+          <button onclick="quickLogin()" class="bebas tracking-widest text-xs px-3 py-2 rounded transition" style="background:#3D2B1F; color:#F5EDD6;">
+            Demo Account
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t mt-16 py-5 text-center" style="border-color:#1A1208;">
+    <p class="text-xs tracking-widest" style="color:#3D2B1F;">© 2026 JOINT ADMISSIONS AND MATRICULATION BOARD — FEDERAL REPUBLIC OF NIGERIA 🇳🇬</p>
+  </footer>
+
+  <script src="auth.js"></script>
+  <script>
+    function handleLogin(event) {
+      event.preventDefault();
+      
+      const email = document.getElementById('login-email').value;
+      const regNo = document.getElementById('login-regno').value;
+      
+      // Find candidate
+      const candidate = candidates.find(c => 
+        c.email.toLowerCase() === email.toLowerCase() && 
+        c.regNo === regNo
+      );
+      
+      if (candidate) {
+        // Set current user
+        localStorage.setItem('currentUser', JSON.stringify(candidate));
+        showToast(`Welcome back, ${candidate.firstName}!`, 'success');
+        
+        // Redirect based on exam status
+        if (candidate.examResults) {
+          window.location.href = 'exam.html?view=results';
+        } else {
+          window.location.href = 'exam.html';
+        }
+      } else {
+        showToast('Invalid email or registration number', 'error');
+      }
+    }
+    
+    function quickLogin() {
+      // Create demo account if not exists
+      let demoCandidate = candidates.find(c => c.email === 'demo@jamb.ng');
+      
+      if (!demoCandidate) {
+        demoCandidate = {
+          regNo: generateRegNumber(),
+          firstName: 'Demo',
+          lastName: 'Candidate',
+          middleName: '',
+          fullName: 'Demo Candidate',
+          dob: '2000-01-01',
+          gender: 'Male',
+          phone: '08012345678',
+          email: 'demo@jamb.ng',
+          stateOrigin: 'Lagos',
+          lga: 'Ikeja',
+          institution: 'University of Lagos (UNILAG)',
+          course: 'Computer Science',
+          examTown: 'Lagos',
+          olevel: 'WAEC',
+          examYear: '2024',
+          subjects: ['Use of English', 'Mathematics', 'Physics', 'Chemistry'],
+          registeredAt: new Date().toLocaleString('en-NG')
+        };
+        candidates.push(demoCandidate);
+        saveData();
+      }
+      
+      // Auto-login
+      localStorage.setItem('currentUser', JSON.stringify(demoCandidate));
+      showToast('Demo account logged in!', 'success');
+      window.location.href = 'exam.html';
+    }
+    
+    // Check if already logged in
+    const currentUser = localStorage.getItem('currentUser');
+    if (currentUser) {
+      const user = JSON.parse(currentUser);
+      showToast(`Already logged in as ${user.firstName}`, 'success');
+      setTimeout(() => {
+        window.location.href = 'exam.html';
+      }, 1500);
+    }
+  </script>
+</body>
+</html>

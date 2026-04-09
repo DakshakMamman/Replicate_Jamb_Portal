@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Portal — Exam</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --savanna: #C8601A;
+      --gold: #D4A017;
+      --night: #0F0C06;
+      --bark: #3D2B1F;
+      --cream: #F5EDD6;
+    }
+    body { font-family: 'Crimson Pro', Georgia, serif; background: #0F0C06; }
+    .bebas { font-family: 'Bebas Neue', Impact, sans-serif; }
+    .fade-in { animation: fadeIn 0.5s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .toast { animation: slideIn 0.3s ease, fadeOut 0.4s ease 2.6s forwards; }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes fadeOut { to { opacity: 0; transform: translateX(100%); } }
+    .paw-bg { background-image: repeating-linear-gradient(45deg, rgba(212,160,23,0.02) 0px, rgba(212,160,23,0.02) 2px, transparent 2px, transparent 20px); }
+    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #1A1208; } ::-webkit-scrollbar-thumb { background: #3D2B1F; border-radius: 3px; }
+    .subject-tab { transition: all 0.3s; }
+    .subject-tab.active { background: #C8601A; color: #F5EDD6; }
+    .subject-tab:hover:not(.active) { background: #3D2B1F; }
+    .option-card { transition: all 0.2s; }
+    .option-card.selected { background: #2A1205; border-color: #C8601A; }
+    .option-card:hover:not(.selected) { border-color: #5C3D20; }
+  </style>
+</head>
+<body class="min-h-screen paw-bg">
+
+  <!-- TOAST -->
+  <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2"></div>
+
+  <!-- HEADER -->
+  <header class="border-b-2" style="background:#1A1208; border-color:#D4A017;">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center gap-4">
+      <svg class="w-14 h-14 flex-shrink-0" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="36" cy="36" r="34" fill="#2A1A05" stroke="#D4A017" stroke-width="1.5"/>
+        <path d="M36 14 C36 14 28 20 20 26 C16 29 14 32 16 35 C18 38 24 37 28 34 L30 32 L28 40 C27 44 26 48 30 50 C32 51 34 50 35 48 L36 44 L37 48 C38 50 40 51 42 50 C46 48 45 44 44 40 L42 32 L44 34 C48 37 54 38 56 35 C58 32 56 29 52 26 C44 20 36 14 36 14Z" fill="#D4A017"/>
+        <ellipse cx="36" cy="26" rx="5" ry="6" fill="#C8601A"/>
+        <circle cx="36" cy="22" r="4" fill="#8B4513"/>
+        <path d="M33 21 Q36 18 39 21" fill="#D4A017"/>
+        <circle cx="34.5" cy="21.5" r="1" fill="#1A1208"/>
+        <circle cx="37.5" cy="21.5" r="1" fill="#1A1208"/>
+      </svg>
+      <div>
+        <h1 class="bebas text-4xl tracking-widest" style="color:#D4A017; line-height:1;">JAMB PORTAL</h1>
+        <p class="text-xs tracking-widest italic" style="color:#C8A96E;">Joint Admissions &amp; Matriculation Board — Nigeria</p>
+      </div>
+      <div class="ml-auto flex items-center gap-3">
+        <span class="text-xs px-3 py-1 rounded-full border font-semibold tracking-wider" style="background:#0A2010; color:#4CAF50; border-color:#1A4020;">● SYSTEM LIVE</span>
+        <button id="user-info" class="hidden bebas tracking-widest text-sm px-4 py-2 rounded" style="background:#2A1A05; color:#F5EDD6;">
+          <!-- User info will be inserted here -->
+        </button>
+        <button id="logout-btn" onclick="logout()" class="hidden bebas tracking-widest text-sm px-4 py-2 rounded border transition" style="color:#E24B4A; border-color:#E24B4A;" onmouseover="this.style.background='#E24B4A';this.style.color='#0F0C06'" onmouseout="this.style.background='transparent';this.style.color='#E24B4A'">
+          Logout
+        </button>
+        <button onclick="window.location.href='index.html'" class="bebas tracking-widest text-sm px-4 py-2 rounded border transition" style="color:#D4A017; border-color:#D4A017;" onmouseover="this.style.background='#D4A017';this.style.color='#0F0C06'" onmouseout="this.style.background='transparent';this.style.color='#D4A017'">
+          ← Home
+        </button>
+        <button onclick="window.location.href='register.html'" class="bebas tracking-widest text-sm px-4 py-2 rounded border transition" style="color:#D4A017; border-color:#D4A017;" onmouseover="this.style.background='#D4A017';this.style.color='#0F0C06'" onmouseout="this.style.background='transparent';this.style.color='#D4A017'">
+          Register
+        </button>
+      </div>
+    </div>
+    <!-- Nigeria stripe -->
+    <div class="h-1" style="background: linear-gradient(90deg, #008751 0%, #00C070 50%, #008751 100%);"></div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="max-w-5xl mx-auto px-6 py-10">
+    <!-- EXAM START SCREEN -->
+    <div id="exam-start" class="text-center py-16">
+      <div class="text-6xl mb-6">🎯</div>
+      <h3 class="bebas text-4xl tracking-wider mb-4" style="color:#D4A017;">READY TO BEGIN?</h3>
+      <p class="text-lg mb-8 max-w-2xl mx-auto" style="color:#8B7355;">You have <span class="bebas" style="color:#C8601A;">2 hours</span> to complete 50 questions across your selected subjects. Each question carries 2 marks. No negative marking.</p>
+      
+      <div class="rounded-2xl p-8 border mb-8 max-w-lg mx-auto" style="background:#1A1208; border-color:#3D2B1F;">
+        <div class="grid grid-cols-2 gap-4 text-left mb-6">
+          <div>
+            <div class="text-xs tracking-widest uppercase mb-1" style="color:#5C4030;">Duration</div>
+            <div class="bebas text-xl" style="color:#D4A017;">2 Hours</div>
+          </div>
+          <div>
+            <div class="text-xs tracking-widest uppercase mb-1" style="color:#5C4030;">Questions</div>
+            <div class="bebas text-xl" style="color:#D4A017;">50 Total</div>
+          </div>
+          <div>
+            <div class="text-xs tracking-widest uppercase mb-1" style="color:#5C4030;">Marks</div>
+            <div class="bebas text-xl" style="color:#D4A017;">100 Total</div>
+          </div>
+          <div>
+            <div class="text-xs tracking-widest uppercase mb-1" style="color:#5C4030;">Subjects</div>
+            <div class="bebas text-xl" style="color:#D4A017;">4 Papers</div>
+          </div>
+        </div>
+        
+        <div class="rounded-lg p-4 mb-6" style="background:#0A2010; border:1px solid #1A4020;">
+          <div class="text-xs mb-2" style="color:#4CAF50;">⚠️ IMPORTANT INSTRUCTIONS</div>
+          <ul class="text-xs text-left space-y-1" style="color:#2A6A3A;">
+            <li>• Choose which subject to start with below</li>
+            <li>• Complete all questions in one subject before moving to the next</li>
+            <li>• You can switch between subjects at any time using the subject tabs</li>
+            <li>• Unanswered questions will be marked as wrong</li>
+            <li>• The timer starts when you click "Start Exam"</li>
+          </ul>
+        </div>
+        
+        <!-- Subject Selection -->
+        <div class="mb-6">
+          <h4 class="bebas tracking-wider text-sm mb-3" style="color:#D4A017;">CHOOSE YOUR STARTING SUBJECT</h4>
+          <div id="subject-selection" class="grid grid-cols-2 gap-3">
+            <!-- Subject options will be inserted here -->
+          </div>
+        </div>
+        
+        <button onclick="startExam()" class="bebas tracking-widest text-lg px-12 py-4 rounded-lg transition" style="background:linear-gradient(135deg,#C8601A,#D4A017); color:#0F0C06;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+          🚀 START EXAM
+        </button>
+      </div>
+    </div>
+
+    <!-- EXAM IN PROGRESS -->
+    <div id="exam-progress" class="hidden">
+      <!-- Header with timer and subject tabs -->
+      <div class="rounded-xl p-4 border mb-6" style="background:#1A1208; border-color:#3D2B1F;">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <div class="text-xs tracking-widest uppercase" style="color:#5C4030;">Time Remaining</div>
+            <div id="exam-timer" class="bebas text-2xl tracking-wider" style="color:#C8601A;">02:00:00</div>
+          </div>
+          <button onclick="submitExam()" class="bebas tracking-widest px-6 py-2 rounded-lg border transition" style="color:#E24B4A; border-color:#E24B4A;" onmouseover="this.style.background='#E24B4A';this.style.color='#0F0C06'" onmouseout="this.style.background='transparent';this.style.color='#E24B4A'">
+            Submit Exam
+          </button>
+        </div>
+        
+        <!-- Subject Tabs -->
+        <div class="flex gap-2" id="subject-tabs">
+          <!-- Subject tabs will be dynamically inserted here -->
+        </div>
+      </div>
+
+      <!-- Question container -->
+      <div class="rounded-2xl p-8 border mb-6" style="background:#1A1208; border-color:#3D2B1F;">
+        <div class="flex items-start gap-4 mb-6">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bebas text-lg" style="background:#C8601A; color:#F5EDD6;" id="question-number">1</div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between mb-4">
+              <div id="current-subject-name" class="bebas text-lg tracking-wider" style="color:#D4A017;">Use of English</div>
+              <div id="question-counter" class="text-sm" style="color:#8B7355;">1 of 15</div>
+            </div>
+            <div id="question-text" class="text-lg leading-relaxed mb-6" style="color:#F5EDD6;">Loading question...</div>
+            <div id="options-container" class="space-y-3">
+              <!-- Options will be dynamically inserted here -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="flex justify-between">
+        <button onclick="previousQuestion()" id="prev-btn" class="bebas tracking-widest px-8 py-3 rounded-lg border transition" style="color:#8B7355; border-color:#3D2B1F;" onmouseover="this.style.borderColor='#8B7355'" onmouseout="this.style.borderColor='#3D2B1F'">
+          ← Previous
+        </button>
+        <div class="flex gap-2" id="question-nav">
+          <!-- Question navigation dots will be inserted here -->
+        </div>
+        <button onclick="nextQuestion()" id="next-btn" class="bebas tracking-widest px-8 py-3 rounded-lg transition" style="background:#C8601A; color:#F5EDD6;" onmouseover="this.style.background='#D4A017';this.style.color='#0F0C06'" onmouseout="this.style.background='#C8601A';this.style.color='#F5EDD6'">
+          Next →
+        </button>
+      </div>
+    </div>
+
+    <!-- EXAM RESULTS -->
+    <div id="exam-results" class="hidden text-center py-16">
+      <div class="text-6xl mb-6">🏆</div>
+      <h3 class="bebas text-4xl tracking-wider mb-4" style="color:#D4A017;">EXAM COMPLETED!</h3>
+      <div id="results-content" class="rounded-2xl p-8 border max-w-2xl mx-auto" style="background:#1A1208; border-color:#3D2B1F;">
+        <!-- Results will be dynamically inserted here -->
+      </div>
+      <div class="mt-8 flex gap-4 justify-center">
+        <button onclick="window.location.href='index.html'" class="bebas tracking-widest px-8 py-3 rounded-lg border transition" style="color:#8B7355; border-color:#3D2B1F;">
+          Back to Home
+        </button>
+        <button onclick="window.location.href='register.html'" class="bebas tracking-widest px-8 py-3 rounded-lg transition" style="background:#C8601A; color:#F5EDD6;">
+          Register Again
+        </button>
+        <button id="view-results-btn" onclick="showResultsList()" class="hidden bebas tracking-widest px-8 py-3 rounded-lg transition" style="background:#4CAF50; color:#F5EDD6;">
+          View All Results
+        </button>
+        <button id="view-detailed-results-btn" onclick="showDetailedResults()" class="bebas tracking-widest px-8 py-3 rounded-lg transition" style="background:#D4A017; color:#F5EDD6;">
+          View Detailed Results
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t mt-16 py-5 text-center" style="border-color:#1A1208;">
+    <p class="text-xs tracking-widest" style="color:#3D2B1F;">© 2026 JOINT ADMISSIONS AND MATRICULATION BOARD — FEDERAL REPUBLIC OF NIGERIA 🇳🇬</p>
+  </footer>
+
+  <script src="auth.js"></script>
+  <script src="questions.js"></script>
+  <script src="exam.js"></script>
+  <script>
+    // Update UI based on authentication status
+    function updateAuthUI() {
+      const user = getCurrentUser();
+      const userInfo = document.getElementById('user-info');
+      const logoutBtn = document.getElementById('logout-btn');
+      
+      if (user) {
+        // User is logged in
+        if (userInfo) {
+          userInfo.classList.remove('hidden');
+          userInfo.textContent = `${user.firstName} ${user.lastName}`;
+        }
+        if (logoutBtn) logoutBtn.classList.remove('hidden');
+      } else {
+        // User is not logged in
+        if (userInfo) userInfo.classList.add('hidden');
+        if (logoutBtn) logoutBtn.classList.add('hidden');
+      }
+    }
+    
+    // Initialize
+    updateAuthUI();
+  </script>
+</body>
+</html>
